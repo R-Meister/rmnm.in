@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Ultra Premium Eyes Menu</title>
+<title>Perfect Eyes Menu</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
@@ -18,28 +18,31 @@ body {
   font-family: sans-serif;
 }
 
+/* ===== CONTAINER ===== */
 .menu {
   background: #2b2b2b;
   border-radius: 999px;
-  padding: 18px 28px;
+  height: 80px;
+  width: 140px; /* compact idle width */
   display: flex;
   align-items: center;
+  justify-content: center;
   position: relative;
   overflow: hidden;
   cursor: pointer;
 }
 
-/* ===== EYES ===== */
-.eye-wrapper {
+/* ===== EYES GROUP ===== */
+.eyes {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  gap: 6px; /* tight spacing */
   position: relative;
+  z-index: 2;
 }
 
 .eye {
-  width: 55px;
-  height: 55px;
+  width: 48px;
+  height: 48px;
   background: white;
   border-radius: 50%;
   position: relative;
@@ -50,32 +53,31 @@ body {
 }
 
 .pupil {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   background: black;
   border-radius: 50%;
   position: relative;
-  z-index: 2;
-}
-
-/* Real eyelid */
-.eyelid {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 0%;
-  width: 100%;
-  background: #2b2b2b;
-  border-radius: 50%;
   z-index: 3;
 }
 
-/* ===== NAV ===== */
+.eyelid {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 0%;
+  background: #2b2b2b;
+  border-radius: 50%;
+  z-index: 4;
+}
+
+/* ===== NAV (ABSOLUTE SO NO SPACE) ===== */
 .nav {
+  position: absolute;
   display: flex;
   gap: 40px;
-  margin: 0 30px;
   opacity: 0;
+  pointer-events: none;
 }
 
 .nav a {
@@ -91,7 +93,11 @@ body {
 
 <div class="menu" id="menu">
 
-  <div class="eye-wrapper" id="leftEyeWrapper">
+  <div class="eyes">
+    <div class="eye">
+      <div class="eyelid"></div>
+      <div class="pupil"></div>
+    </div>
     <div class="eye">
       <div class="eyelid"></div>
       <div class="pupil"></div>
@@ -105,13 +111,6 @@ body {
     <a href="#">Contact</a>
   </nav>
 
-  <div class="eye-wrapper" id="rightEyeWrapper">
-    <div class="eye">
-      <div class="eyelid"></div>
-      <div class="pupil"></div>
-    </div>
-  </div>
-
 </div>
 
 <script>
@@ -121,67 +120,47 @@ const navLinks = document.querySelectorAll(".nav a");
 const pupils = document.querySelectorAll(".pupil");
 const eyes = document.querySelectorAll(".eye");
 const eyelids = document.querySelectorAll(".eyelid");
-const leftEye = document.getElementById("leftEyeWrapper");
-const rightEye = document.getElementById("rightEyeWrapper");
 
 /* ==============================
-   INITIAL STATE (EYES TOGETHER)
+   EXPANSION TIMELINE
 ============================== */
-gsap.set(nav, { opacity: 0 });
-gsap.set(navLinks, { y: 10, opacity: 0 });
+const tl = gsap.timeline({ paused: true });
+
+tl.to(menu, {
+  width: 700,
+  duration: 0.9,
+  ease: "elastic.out(1,0.6)"
+})
+.to(".eyes", {
+  gap: 500,
+  duration: 0.8,
+  ease: "elastic.out(1,0.6)"
+}, 0)
+.to(nav, {
+  opacity: 1,
+  duration: 0.2
+}, 0.3)
+.to(navLinks, {
+  y: 0,
+  opacity: 1,
+  stagger: 0.05,
+  duration: 0.4,
+  ease: "power3.out"
+}, 0.3);
+
+menu.addEventListener("mouseenter", () => tl.play());
+menu.addEventListener("mouseleave", () => tl.reverse());
 
 /* ==============================
-   SPLIT + ELASTIC EXPAND
-============================== */
-const expandTimeline = gsap.timeline({ paused: true });
-
-expandTimeline
-  .to(menu, {
-    paddingLeft: 60,
-    paddingRight: 60,
-    duration: 0.9,
-    ease: "elastic.out(1,0.6)"
-  })
-  .to(leftEye, {
-    x: -40,
-    duration: 0.8,
-    ease: "elastic.out(1,0.6)"
-  }, 0)
-  .to(rightEye, {
-    x: 40,
-    duration: 0.8,
-    ease: "elastic.out(1,0.6)"
-  }, 0)
-  .to(nav, { opacity: 1, duration: 0.2 }, 0.2)
-  .to(navLinks, {
-    y: 0,
-    opacity: 1,
-    stagger: 0.05,
-    duration: 0.4,
-    ease: "power3.out"
-  }, 0.2);
-
-menu.addEventListener("mouseenter", () => {
-  expandTimeline.play();
-  widenEyes(true);
-});
-
-menu.addEventListener("mouseleave", () => {
-  expandTimeline.reverse();
-  widenEyes(false);
-});
-
-/* ==============================
-   CURSOR TRACKING (SMOOTH)
+   CURSOR TRACKING
 ============================== */
 document.addEventListener("mousemove", (e) => {
   eyes.forEach((eye, i) => {
     const rect = eye.getBoundingClientRect();
     const centerX = rect.left + rect.width/2;
     const centerY = rect.top + rect.height/2;
-
     const angle = Math.atan2(e.clientY - centerY, e.clientX - centerX);
-    const max = 12;
+    const max = 10;
 
     gsap.to(pupils[i], {
       x: Math.cos(angle) * max,
@@ -193,14 +172,13 @@ document.addEventListener("mousemove", (e) => {
 });
 
 /* ==============================
-   BLINK SYSTEM (ORGANIC)
+   BLINK SYSTEM
 ============================== */
 function blink() {
   eyelids.forEach((lid, i) => {
     gsap.to(lid, {
       height: "100%",
       duration: 0.12,
-      ease: "power2.in",
       yoyo: true,
       repeat: 1,
       delay: i * 0.05
@@ -212,32 +190,18 @@ function randomBlink() {
   blink();
   gsap.delayedCall(gsap.utils.random(2,5), randomBlink);
 }
-
 randomBlink();
 
 /* ==============================
-   MICRO IDLE MOVEMENT
+   MICRO IDLE
 ============================== */
 gsap.to(pupils, {
-  x: "+=3",
+  x: "+=2",
   yoyo: true,
   repeat: -1,
   duration: 2,
   ease: "sine.inOut"
 });
-
-/* ==============================
-   HOVER WIDEN EFFECT
-============================== */
-function widenEyes(active) {
-  eyes.forEach(eye => {
-    gsap.to(eye, {
-      scaleY: active ? 1.15 : 1,
-      duration: 0.4,
-      ease: "power2.out"
-    });
-  });
-}
 </script>
 
 </body>
