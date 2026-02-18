@@ -54,22 +54,28 @@ body {
 
 .pupil {
   width: 18px;
-  height: 18px;
-  background: black;
+  height: 30px;              /* vertical oval */
+  background: #000;
   border-radius: 50%;
+  transform: rotate(18deg);  /* slight tilt like screenshot */
   position: relative;
-  z-index: 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.eyelid {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  height: 0%;
-  background: #2b2b2b;
+/* White highlight */
+.highlight {
+  width: 6px;
+  height: 10px;
+  background: white;
   border-radius: 50%;
-  z-index: 4;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  transform: rotate(-15deg);
 }
+
 
 /* ===== NAV (ABSOLUTE SO NO SPACE) ===== */
 .nav {
@@ -93,16 +99,21 @@ body {
 
 <div class="menu" id="menu">
 
-  <div class="eyes">
-    <div class="eye">
-      <div class="eyelid"></div>
-      <div class="pupil"></div>
-    </div>
-    <div class="eye">
-      <div class="eyelid"></div>
-      <div class="pupil"></div>
+<div class="eyes">
+  <div class="eye">
+    <div class="eyelid"></div>
+    <div class="pupil">
+      <div class="highlight"></div>
     </div>
   </div>
+
+  <div class="eye">
+    <div class="eyelid"></div>
+    <div class="pupil">
+      <div class="highlight"></div>
+    </div>
+  </div>
+</div>
 
   <nav class="nav" id="nav">
     <a href="#">Projects</a>
@@ -121,43 +132,62 @@ const pupils = document.querySelectorAll(".pupil");
 const eyes = document.querySelectorAll(".eye");
 const eyelids = document.querySelectorAll(".eyelid");
 
+let expanded = false;
+
 /* ==============================
-   EXPANSION TIMELINE
+   EXPAND FUNCTION
 ============================== */
-const expandTL = gsap.timeline({ paused: true });
+function expand() {
+  if (expanded) return;
+  expanded = true;
 
-expandTL
-.to(menu, {
-  width: 700,
-  duration: 0.9,
-  ease: "elastic.out(1,0.6)"
-})
-.to(".eyes", {
-  gap: 500,
-  duration: 0.8,
-  ease: "elastic.out(1,0.6)"
-}, 0)
-.to(nav, { opacity: 1, duration: 0.2 }, 0.3)
-.to(navLinks, {
-  y: 0,
-  opacity: 1,
-  stagger: 0.05,
-  duration: 0.4,
-  ease: "power3.out"
-}, 0.3);
+  gsap.to(menu, {
+    width: 700,
+    duration: 0.8,
+    ease: "elastic.out(1,0.6)"
+  });
 
+  gsap.to(".eyes", {
+    gap: 500,
+    duration: 0.8,
+    ease: "elastic.out(1,0.6)"
+  });
 
-/* Faster Smooth Collapse */
+  gsap.to(nav, {
+    opacity: 1,
+    duration: 0.2,
+    delay: 0.2
+  });
+
+  gsap.to(navLinks, {
+    y: 0,
+    opacity: 1,
+    stagger: 0.05,
+    duration: 0.4,
+    delay: 0.2,
+    ease: "power3.out"
+  });
+}
+
+/* ==============================
+   COLLAPSE FUNCTION (FAST + CLEAN)
+============================== */
 function collapse() {
+  if (!expanded) return;
+  expanded = false;
+
+  gsap.killTweensOf(menu);
+  gsap.killTweensOf(".eyes");
+
   gsap.to(menu, {
     width: 170,
-    duration: 0.35,
+    duration: 0.28,
     ease: "power3.out"
   });
 
   gsap.to(".eyes", {
     gap: 6,
-    duration: 0.35,
+    duration: 0.28,
     ease: "power3.out"
   });
 
@@ -173,8 +203,8 @@ function collapse() {
   });
 }
 
-menu.addEventListener("mouseenter", () => expandTL.play());
-menu.addEventListener("mouseleave", () => collapse());
+menu.addEventListener("mouseenter", expand);
+menu.addEventListener("mouseleave", collapse);
 
 /* ==============================
    CURSOR TRACKING
@@ -190,9 +220,11 @@ document.addEventListener("mousemove", (e) => {
     gsap.to(pupils[i], {
       x: Math.cos(angle) * max,
       y: Math.sin(angle) * max,
-      duration: 0.25,
+      rotation: 15,   // keep tilt
+      duration: 0.2,
       ease: "power2.out"
-    });
+});
+
   });
 });
 
