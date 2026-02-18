@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Premium Eyes Menu</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ultra Premium Eyes Menu</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
@@ -14,67 +14,75 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #ececec;
+  background: #e8e8e8;
   font-family: sans-serif;
 }
 
-/* ===== MENU CONTAINER ===== */
 .menu {
-  display: flex;
-  align-items: center;
-  background: #222;
-  padding: 14px 30px;
+  background: #2b2b2b;
   border-radius: 999px;
-  cursor: pointer;
-  overflow: hidden;
-}
-
-/* ===== EYES ===== */
-.eye {
-  width: 50px;
-  height: 50px;
-  background: white;
-  border-radius: 50%;
+  padding: 18px 28px;
   display: flex;
-  justify-content: center;
   align-items: center;
   position: relative;
   overflow: hidden;
-  margin: 0 20px;
+  cursor: pointer;
+}
+
+/* ===== EYES ===== */
+.eye-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+.eye {
+  width: 55px;
+  height: 55px;
+  background: white;
+  border-radius: 50%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 }
 
 .pupil {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   background: black;
   border-radius: 50%;
+  position: relative;
+  z-index: 2;
 }
 
-/* eyelid */
-.eye::before {
-  content: "";
+/* Real eyelid */
+.eyelid {
   position: absolute;
   top: 0;
-  width: 100%;
+  left: 0;
   height: 0%;
-  background: #222;
+  width: 100%;
+  background: #2b2b2b;
   border-radius: 50%;
-  z-index: 2;
+  z-index: 3;
 }
 
 /* ===== NAV ===== */
 .nav {
   display: flex;
   gap: 40px;
-  color: white;
-  white-space: nowrap;
+  margin: 0 30px;
+  opacity: 0;
 }
 
 .nav a {
   color: white;
   text-decoration: none;
   font-size: 18px;
-  opacity: 0;
+  transform: translateY(10px);
 }
 </style>
 </head>
@@ -82,120 +90,149 @@ body {
 <body>
 
 <div class="menu" id="menu">
-  <div class="eye">
-    <div class="pupil"></div>
+
+  <div class="eye-wrapper" id="leftEyeWrapper">
+    <div class="eye">
+      <div class="eyelid"></div>
+      <div class="pupil"></div>
+    </div>
   </div>
 
-  <nav class="nav">
+  <nav class="nav" id="nav">
     <a href="#">Projects</a>
     <a href="#">About</a>
     <a href="#">Process</a>
     <a href="#">Contact</a>
   </nav>
 
-  <div class="eye">
-    <div class="pupil"></div>
+  <div class="eye-wrapper" id="rightEyeWrapper">
+    <div class="eye">
+      <div class="eyelid"></div>
+      <div class="pupil"></div>
+    </div>
   </div>
+
 </div>
 
 <script>
 const menu = document.getElementById("menu");
-const eyes = document.querySelectorAll(".eye");
-const pupils = document.querySelectorAll(".pupil");
+const nav = document.getElementById("nav");
 const navLinks = document.querySelectorAll(".nav a");
+const pupils = document.querySelectorAll(".pupil");
+const eyes = document.querySelectorAll(".eye");
+const eyelids = document.querySelectorAll(".eyelid");
+const leftEye = document.getElementById("leftEyeWrapper");
+const rightEye = document.getElementById("rightEyeWrapper");
 
-/* =========================
-   ELASTIC EXPANSION
-========================= */
-menu.addEventListener("mouseenter", () => {
-  gsap.to(menu, {
+/* ==============================
+   INITIAL STATE (EYES TOGETHER)
+============================== */
+gsap.set(nav, { opacity: 0 });
+gsap.set(navLinks, { y: 10, opacity: 0 });
+
+/* ==============================
+   SPLIT + ELASTIC EXPAND
+============================== */
+const expandTimeline = gsap.timeline({ paused: true });
+
+expandTimeline
+  .to(menu, {
     paddingLeft: 60,
     paddingRight: 60,
+    duration: 0.9,
+    ease: "elastic.out(1,0.6)"
+  })
+  .to(leftEye, {
+    x: -40,
     duration: 0.8,
-    ease: "elastic.out(1, 0.5)"
-  });
-
-  gsap.to(navLinks, {
-    opacity: 1,
+    ease: "elastic.out(1,0.6)"
+  }, 0)
+  .to(rightEye, {
+    x: 40,
+    duration: 0.8,
+    ease: "elastic.out(1,0.6)"
+  }, 0)
+  .to(nav, { opacity: 1, duration: 0.2 }, 0.2)
+  .to(navLinks, {
     y: 0,
-    duration: 0.5,
+    opacity: 1,
     stagger: 0.05,
+    duration: 0.4,
     ease: "power3.out"
-  });
+  }, 0.2);
 
-  eyelidSquash(true);
+menu.addEventListener("mouseenter", () => {
+  expandTimeline.play();
+  widenEyes(true);
 });
 
 menu.addEventListener("mouseleave", () => {
-  gsap.to(menu, {
-    paddingLeft: 30,
-    paddingRight: 30,
-    duration: 0.6,
-    ease: "power3.inOut"
-  });
-
-  gsap.to(navLinks, {
-    opacity: 0,
-    duration: 0.3
-  });
-
-  eyelidSquash(false);
+  expandTimeline.reverse();
+  widenEyes(false);
 });
 
-/* =========================
-   CURSOR TRACKING (NATURAL)
-========================= */
+/* ==============================
+   CURSOR TRACKING (SMOOTH)
+============================== */
 document.addEventListener("mousemove", (e) => {
-  eyes.forEach((eye, index) => {
-    const pupil = pupils[index];
+  eyes.forEach((eye, i) => {
     const rect = eye.getBoundingClientRect();
-
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
+    const centerX = rect.left + rect.width/2;
+    const centerY = rect.top + rect.height/2;
 
     const angle = Math.atan2(e.clientY - centerY, e.clientX - centerX);
-    const max = 10;
+    const max = 12;
 
-    const x = Math.cos(angle) * max;
-    const y = Math.sin(angle) * max;
-
-    gsap.to(pupil, {
-      x: x,
-      y: y,
-      duration: 0.2,
+    gsap.to(pupils[i], {
+      x: Math.cos(angle) * max,
+      y: Math.sin(angle) * max,
+      duration: 0.25,
       ease: "power2.out"
     });
   });
 });
 
-/* =========================
-   BLINK ANIMATION
-========================= */
+/* ==============================
+   BLINK SYSTEM (ORGANIC)
+============================== */
 function blink() {
-  eyes.forEach((eye) => {
-    const lid = eye.querySelector("::before");
-  });
-
-  gsap.to(".eye::before", {
-    height: "100%",
-    duration: 0.15,
-    yoyo: true,
-    repeat: 1,
-    ease: "power2.inOut"
+  eyelids.forEach((lid, i) => {
+    gsap.to(lid, {
+      height: "100%",
+      duration: 0.12,
+      ease: "power2.in",
+      yoyo: true,
+      repeat: 1,
+      delay: i * 0.05
+    });
   });
 }
 
-setInterval(() => {
+function randomBlink() {
   blink();
-}, 3000);
+  gsap.delayedCall(gsap.utils.random(2,5), randomBlink);
+}
 
-/* =========================
-   EYELID SQUASH ON HOVER
-========================= */
-function eyelidSquash(active) {
-  eyes.forEach((eye) => {
+randomBlink();
+
+/* ==============================
+   MICRO IDLE MOVEMENT
+============================== */
+gsap.to(pupils, {
+  x: "+=3",
+  yoyo: true,
+  repeat: -1,
+  duration: 2,
+  ease: "sine.inOut"
+});
+
+/* ==============================
+   HOVER WIDEN EFFECT
+============================== */
+function widenEyes(active) {
+  eyes.forEach(eye => {
     gsap.to(eye, {
-      scaleY: active ? 0.85 : 1,
+      scaleY: active ? 1.15 : 1,
       duration: 0.4,
       ease: "power2.out"
     });
