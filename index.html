@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eyes Menu</title>
+
+<style>
+body {
+  background: #e9e9e9;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: sans-serif;
+}
+
+.menu {
+  display: flex;
+  align-items: center;
+  background: #2c2c2c;
+  padding: 12px 20px;
+  border-radius: 100px;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  cursor: pointer;
+}
+
+.menu.collapsed {
+  width: 120px;
+}
+
+.menu.expanded {
+  width: 600px;
+}
+
+.eyes {
+  display: flex;
+  gap: 12px;
+  margin-right: 20px;
+}
+
+.eye {
+  width: 40px;
+  height: 40px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.pupil {
+  width: 14px;
+  height: 14px;
+  background: black;
+  border-radius: 50%;
+  transition: transform 0.05s linear;
+}
+
+.nav {
+  display: flex;
+  gap: 40px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  white-space: nowrap;
+}
+
+.menu.expanded .nav {
+  opacity: 1;
+}
+
+.nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="menu collapsed" id="menu">
+  <div class="eyes">
+    <div class="eye"><div class="pupil"></div></div>
+    <div class="eye"><div class="pupil"></div></div>
+  </div>
+
+  <nav class="nav">
+    <a href="#">Projects</a>
+    <a href="#">About</a>
+    <a href="#">Process</a>
+    <a href="#">Contact</a>
+  </nav>
+</div>
+
+<script>
+const pupils = document.querySelectorAll(".pupil");
+const eyes = document.querySelectorAll(".eye");
+const menu = document.getElementById("menu");
+
+menu.addEventListener("mouseenter", () => {
+  menu.classList.remove("collapsed");
+  menu.classList.add("expanded");
+});
+
+menu.addEventListener("mouseleave", () => {
+  menu.classList.remove("expanded");
+  menu.classList.add("collapsed");
+});
+
+document.addEventListener("mousemove", (e) => {
+  eyes.forEach((eye, index) => {
+    const pupil = pupils[index];
+    const rect = eye.getBoundingClientRect();
+
+    const eyeCenterX = rect.left + rect.width / 2;
+    const eyeCenterY = rect.top + rect.height / 2;
+
+    const angle = Math.atan2(e.clientY - eyeCenterY, e.clientX - eyeCenterX);
+    const maxDistance = 8;
+
+    const x = Math.cos(angle) * maxDistance;
+    const y = Math.sin(angle) * maxDistance;
+
+    pupil.style.transform = `translate(${x}px, ${y}px)`;
+  });
+});
+</script>
+
+</body>
+</html>
