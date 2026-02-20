@@ -83,31 +83,42 @@ class Loader {
     this.animation = tl;
   }
 
+  getDotSize() {
+    const eye = document.querySelector('.eyes-menu .eye');
+    if (!eye) return 16;
+    return Math.max(8, eye.offsetWidth * 0.08);
+  }
+
   animateDotsToEyes() {
-    const eyes = document.querySelectorAll('.eyes-menu .pupil');
-    if (eyes.length < 2) {
+    const pupils = document.querySelectorAll('.eyes-menu .pupil');
+    if (pupils.length < 2) {
       this.fadeOutLoader();
       return;
     }
 
     const idot1Rect = this.idots[0].getBoundingClientRect();
     const idot2Rect = this.idots[1].getBoundingClientRect();
-    const eye1Rect = eyes[0].getBoundingClientRect();
-    const eye2Rect = eyes[1].getBoundingClientRect();
+    const pupil1Rect = pupils[0].getBoundingClientRect();
+    const pupil2Rect = pupils[1].getBoundingClientRect();
 
-    const dot1StartX = idot1Rect.left + idot1Rect.width / 2 - 4;
-    const dot1StartY = idot1Rect.top - 8;
-    const dot2StartX = idot2Rect.left + idot2Rect.width / 2 - 4;
-    const dot2StartY = idot2Rect.top - 8;
+    const dotSize = this.getDotSize();
+    const halfDot = dotSize / 2;
 
-    const dot1EndX = eye1Rect.left + eye1Rect.width / 2 - 4;
-    const dot1EndY = eye1Rect.top + eye1Rect.height / 2 - 4;
-    const dot2EndX = eye2Rect.left + eye2Rect.width / 2 - 4;
-    const dot2EndY = eye2Rect.top + eye2Rect.height / 2 - 4;
+    const dot1StartX = idot1Rect.left + idot1Rect.width / 2 - halfDot;
+    const dot1StartY = idot1Rect.top - dotSize;
+    const dot2StartX = idot2Rect.left + idot2Rect.width / 2 - halfDot;
+    const dot2StartY = idot2Rect.top - dotSize;
+
+    const dot1EndX = pupil1Rect.left + pupil1Rect.width / 2 - halfDot;
+    const dot1EndY = pupil1Rect.top + pupil1Rect.height / 2 - halfDot;
+    const dot2EndX = pupil2Rect.left + pupil2Rect.width / 2 - halfDot;
+    const dot2EndY = pupil2Rect.top + pupil2Rect.height / 2 - halfDot;
 
     gsap.set(this.dots[0], {
       x: dot1StartX,
       y: dot1StartY,
+      width: dotSize,
+      height: dotSize,
       opacity: 1,
       scale: 1
     });
@@ -115,6 +126,8 @@ class Loader {
     gsap.set(this.dots[1], {
       x: dot2StartX,
       y: dot2StartY,
+      width: dotSize,
+      height: dotSize,
       opacity: 1,
       scale: 1
     });
@@ -126,7 +139,7 @@ class Loader {
     dotTl.to(this.dots, {
       x: (i) => i === 0 ? dot1EndX : dot2EndX,
       y: (i) => i === 0 ? dot1EndY : dot2EndY,
-      scale: 2,
+      scale: 1.5,
       duration: 0.6,
       ease: 'power2.inOut',
       stagger: 0.1

@@ -1,8 +1,16 @@
 .eyes-menu {
+  --eye-size: clamp(24px, 4vw, 40px);
+  --pupil-width: calc(var(--eye-size) * 0.35);
+  --pupil-height: calc(var(--eye-size) * 0.55);
+  --pupil-max-move: calc(var(--eye-size) * 0.18);
+  --highlight-size: calc(var(--eye-size) * 0.12);
+  --gap: calc(var(--eye-size) * 0.22);
+  --container-padding: calc(var(--eye-size) * 0.25);
+  
   background: #2b2b2b;
   border-radius: 999px;
-  height: 80px;
-  width: 170px;
+  height: calc(var(--eye-size) + var(--container-padding) * 2);
+  width: calc(var(--eye-size) * 2 + var(--gap) + var(--container-padding) * 2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -19,14 +27,14 @@
 
 .eyes-menu .eyes {
   display: flex;
-  gap: 6px;
+  gap: var(--gap);
   position: relative;
   z-index: 2;
 }
 
 .eyes-menu .eye {
-  width: 48px;
-  height: 48px;
+  width: var(--eye-size);
+  height: var(--eye-size);
   background: white;
   border-radius: 50%;
   position: relative;
@@ -37,8 +45,8 @@
 }
 
 .eyes-menu .pupil {
-  width: 18px;
-  height: 30px;
+  width: var(--pupil-width);
+  height: var(--pupil-height);
   background: #000;
   border-radius: 50%;
   transform: rotate(18deg);
@@ -59,20 +67,20 @@
 }
 
 .eyes-menu .highlight {
-  width: 6px;
-  height: 10px;
+  width: var(--highlight-size);
+  height: calc(var(--highlight-size) * 1.6);
   background: white;
   border-radius: 50%;
   position: absolute;
-  top: 4px;
-  left: 4px;
+  top: calc(var(--highlight-size) * 0.5);
+  left: calc(var(--highlight-size) * 0.5);
   transform: rotate(-15deg);
 }
 
 .eyes-menu .nav {
   position: absolute;
   display: flex;
-  gap: 40px;
+  gap: calc(var(--eye-size) * 0.4);
   opacity: 0;
   pointer-events: none;
   z-index: 1;
@@ -81,6 +89,6 @@
 .eyes-menu .nav a {
   color: white;
   text-decoration: none;
-  font-size: 18px;
+  font-size: clamp(14px, 1.5vw, 18px);
   transform: translateY(10px);
 }

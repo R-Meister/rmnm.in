@@ -1,4 +1,6 @@
 .loader {
+  --dot-size: clamp(8px, 1vw, 16px);
+  
   position: fixed;
   inset: 0;
   z-index: 9999;
@@ -71,8 +73,8 @@
 
 .loader__dot {
   position: absolute;
-  width: 8px;
-  height: 8px;
+  width: var(--dot-size);
+  height: var(--dot-size);
   background: #1a1a1a;
   border-radius: 50%;
   opacity: 0;
