@@ -24,60 +24,67 @@ class Loader {
       onComplete: () => this.complete()
     });
 
-    tl.set(this.words, { opacity: 0, y: 30 });
+    tl.set(this.words, { opacity: 0, y: 60 });
 
     tl.to('.loader__word--hi', {
       opacity: 1,
       y: 0,
-      duration: 0.8,
+      duration: 0.9,
       ease: 'power3.out'
     });
 
-    tl.to('.loader__word--this', {
+    tl.to('.loader__word--hi', {
+      scale: 0.9,
+      duration: 0.3,
+      ease: 'power2.inOut',
+      yoyo: true,
+      repeat: 1
+    }, '+=0.3');
+
+    tl.to('.loader__word--iam', {
       opacity: 1,
       y: 0,
-      duration: 0.6,
+      duration: 0.7,
       ease: 'power3.out'
-    }, '-=0.4');
+    }, '-=0.1');
 
     tl.to('.loader__word--name', {
       opacity: 1,
       y: 0,
       duration: 1,
       ease: 'power3.out'
-    }, '-=0.3');
+    }, '-=0.4');
 
-    tl.to({}, { duration: 1.2 });
+    tl.to({}, { duration: 1.5 });
 
     tl.to('.loader__word--hi', {
       opacity: 0,
-      y: -20,
+      y: -40,
       duration: 0.5,
       ease: 'power2.in'
     }, 'exit');
 
-    tl.to('.loader__word--this', {
+    tl.to('.loader__word--iam', {
       opacity: 0,
-      y: -15,
+      y: -30,
       duration: 0.4,
       ease: 'power2.in'
-    }, 'exit+=0.1');
+    }, 'exit+=0.08');
 
     tl.to('.loader__word--name', {
       opacity: 0,
-      y: -30,
+      y: -50,
       duration: 0.6,
       ease: 'power2.in'
-    }, 'exit+=0.15');
+    }, 'exit+=0.12');
 
     tl.to(this.loader, {
       opacity: 0,
-      duration: 0.5,
-      ease: 'power2.inOut',
-      onComplete: () => {
-        this.hideLoader();
-      }
-    }, '-=0.2');
+      duration: 0.6,
+      ease: 'power2.inOut'
+    }, '-=0.3');
+
+    tl.set(this.loader, { display: 'none' });
 
     this.animation = tl;
   }
@@ -92,7 +99,6 @@ class Loader {
   hideLoader() {
     if (this.loader) {
       this.loader.classList.add('is-hidden');
-      this.loader.style.display = 'none';
     }
     this.complete();
   }
