@@ -24,6 +24,11 @@ body.is-loaded .content {
   opacity: 1;
 }
 
+body.is-loaded .eyes-menu {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .content {
   padding: 120px 40px 40px;
   max-width: 1200px;

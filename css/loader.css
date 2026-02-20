@@ -57,6 +57,27 @@
   letter-spacing: -0.01em;
 }
 
+.loader__idot {
+  position: relative;
+  display: inline-block;
+}
+
+.loader__dots {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10000;
+}
+
+.loader__dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #1a1a1a;
+  border-radius: 50%;
+  opacity: 0;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .loader__word {
     opacity: 1;
