@@ -1,0 +1,49 @@
+important feature 
+
+
+
+ {/* <div
+        className={`  pt-20 md:pt-0 absolute md:static ${
+          mode.clr ? 'bg-white' : 'bg-black'
+        }   w-[100%] md:w-auto h-[100vh] md:h-auto top-0  left-0 ${
+          menu ? 'translate-y-20 transition-all' : 'translate-y-[-100%] transition-all'
+        } `}
+      >
+        <ul className=' p-0 justify-center  md:m-[-10px]  items-center flex flex-col md:flex-row md:justify-between gap-20 md:gap-16 text-2xl md:text-sm md:static md:flex'>
+          <NavLink to='/' className='hover:text-purple-500 transition-all cursor-pointer'>
+            Home
+          </NavLink>
+          <NavLink to='/projects' className='hover:text-purple-500 transition-all cursor-pointer'>
+            Project
+          </NavLink>
+          <NavLink to='/about' className='hover:text-purple-500 transition-all cursor-pointer'>
+            About
+          </NavLink>
+          <NavLink
+            to='https://drive.google.com/file/d/1e-2Tzhsk2F_7kInXLDRbrILAZAaF09qU/view?usp=sharing'
+            target='_blank'
+            className='hover:text-purple-500 transition-all cursor-pointer'
+          >
+            Resume
+          </NavLink>
+        </ul>
+      </div>
+      <div
+        onClick={() => {
+          setmenu(!menu);
+        }}
+        className={` block md:hidden border-[1.5px] rounded-[50%] p-2 ${
+          mode.clr ? 'border-black text-black' : 'border-white text-white'
+        }  hover:border-purple-500 hover:text-purple-500 transition-all  cursor-pointer `}
+      >
+        {menu ? (
+          <AiOutlineClose className='z-999 text-2xl ' />
+        ) : (
+          <CgMenuRight className='z-999 text-2xl ' />
+        )}
+      </div> */}
+
+      vertical rule
+      
+       
+      {/* <div className={`h-10 ${mode.clr ? 'bg-black' : 'bg-white'} w-[2px]`}></div> */}

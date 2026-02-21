@@ -1,16 +1,31 @@
 class Loader {
   constructor() {
     this.loader = null;
-    this.animation = null;
+    this.greetingElement = null;
     this.isComplete = false;
     this.onCompleteCallback = null;
+    this.greetings = [
+      "Hello",
+      "Hola",
+      "Bonjour",
+      "Hallo",
+      "你好",
+      "こんにちは",
+      "Ciao",
+      "Здравствуйте",
+      "مرحبا",
+      "Olá",
+      "안녕하세요",
+      "नमस्ते"
+    ];
+    this.currentIndex = 0;
+    this.intervalId = null;
+    this.timeoutId = null;
   }
 
   init(loaderElement) {
     this.loader = loaderElement;
-    this.words = this.loader.querySelectorAll('.loader__word');
-    this.dots = this.loader.querySelectorAll('.loader__dot');
-    this.idots = this.loader.querySelectorAll('.loader__idot');
+    this.greetingElement = document.getElementById('greeting-text');
     this.runAnimation();
   }
 
@@ -22,135 +37,21 @@ class Loader {
       return;
     }
 
-    const tl = gsap.timeline({
-      onComplete: () => this.animateDotsToEyes()
-    });
+    this.greetingElement.textContent = this.greetings[0];
 
-    tl.set(this.words, { opacity: 0, y: 60 });
+    this.intervalId = setInterval(() => {
+      this.currentIndex++;
+      if (this.currentIndex < this.greetings.length) {
+        this.greetingElement.textContent = this.greetings[this.currentIndex];
+      }
+      if (this.currentIndex >= this.greetings.length - 1) {
+        clearInterval(this.intervalId);
+      }
+    }, 320);
 
-    tl.to('.loader__word--hi', {
-      opacity: 1,
-      y: 0,
-      duration: 0.45,
-      ease: 'power3.out'
-    });
-
-    tl.to('.loader__word--hi', {
-      scale: 0.9,
-      duration: 0.15,
-      ease: 'power2.inOut',
-      yoyo: true,
-      repeat: 1
-    }, '+=0.15');
-
-    tl.to('.loader__word--iam', {
-      opacity: 1,
-      y: 0,
-      duration: 0.35,
-      ease: 'power3.out'
-    }, '-=0.05');
-
-    tl.to('.loader__word--name', {
-      opacity: 1,
-      y: 0,
-      duration: 0.5,
-      ease: 'power3.out'
-    }, '-=0.2');
-
-    tl.to({}, { duration: 0.75 });
-
-    tl.to('.loader__word--hi', {
-      opacity: 0,
-      y: -40,
-      duration: 0.25,
-      ease: 'power2.in'
-    }, 'exit');
-
-    tl.to('.loader__word--iam', {
-      opacity: 0,
-      y: -30,
-      duration: 0.2,
-      ease: 'power2.in'
-    }, 'exit+=0.04');
-
-    tl.to('.loader__word--name', {
-      opacity: 0,
-      y: -50,
-      duration: 0.3,
-      ease: 'power2.in'
-    }, 'exit+=0.06');
-
-    this.animation = tl;
-  }
-
-  getDotSize() {
-    const eye = document.querySelector('.eyes-menu .eye');
-    if (!eye) return 16;
-    return Math.max(8, eye.offsetWidth * 0.08);
-  }
-
-  animateDotsToEyes() {
-    const pupils = document.querySelectorAll('.eyes-menu .pupil');
-    if (pupils.length < 2) {
+    this.timeoutId = setTimeout(() => {
       this.fadeOutLoader();
-      return;
-    }
-
-    const idot1Rect = this.idots[0].getBoundingClientRect();
-    const idot2Rect = this.idots[1].getBoundingClientRect();
-    const pupil1Rect = pupils[0].getBoundingClientRect();
-    const pupil2Rect = pupils[1].getBoundingClientRect();
-
-    const dotSize = this.getDotSize();
-    const halfDot = dotSize / 2;
-
-    const dot1StartX = idot1Rect.left + idot1Rect.width / 2 - halfDot;
-    const dot1StartY = idot1Rect.top - dotSize;
-    const dot2StartX = idot2Rect.left + idot2Rect.width / 2 - halfDot;
-    const dot2StartY = idot2Rect.top - dotSize;
-
-    const dot1EndX = pupil1Rect.left + pupil1Rect.width / 2 - halfDot;
-    const dot1EndY = pupil1Rect.top + pupil1Rect.height / 2 - halfDot;
-    const dot2EndX = pupil2Rect.left + pupil2Rect.width / 2 - halfDot;
-    const dot2EndY = pupil2Rect.top + pupil2Rect.height / 2 - halfDot;
-
-    gsap.set(this.dots[0], {
-      x: dot1StartX,
-      y: dot1StartY,
-      width: dotSize,
-      height: dotSize,
-      opacity: 1,
-      scale: 1
-    });
-
-    gsap.set(this.dots[1], {
-      x: dot2StartX,
-      y: dot2StartY,
-      width: dotSize,
-      height: dotSize,
-      opacity: 1,
-      scale: 1
-    });
-
-    const dotTl = gsap.timeline({
-      onComplete: () => this.fadeOutLoader()
-    });
-
-    dotTl.to(this.dots, {
-      x: (i) => i === 0 ? dot1EndX : dot2EndX,
-      y: (i) => i === 0 ? dot1EndY : dot2EndY,
-      scale: 1.5,
-      duration: 0.6,
-      ease: 'power2.inOut',
-      stagger: 0.1
-    });
-
-    dotTl.to(this.dots, {
-      opacity: 0,
-      scale: 0,
-      duration: 0.3,
-      ease: 'power2.in'
-    });
+    }, 3800);
   }
 
   fadeOutLoader() {
@@ -191,8 +92,11 @@ class Loader {
   }
 
   destroy() {
-    if (this.animation) {
-      this.animation.kill();
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+    if (this.timeoutId) {
+      clearTimeout(this.timeoutId);
     }
     if (this.loader && this.loader.parentNode) {
       this.loader.parentNode.removeChild(this.loader);

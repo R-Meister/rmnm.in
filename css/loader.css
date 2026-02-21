@@ -1,6 +1,4 @@
 .loader {
-  --dot-size: clamp(8px, 1vw, 16px);
-  
   position: fixed;
   inset: 0;
   z-index: 9999;
@@ -20,69 +18,17 @@
   padding: 2rem;
 }
 
-.loader__line {
-  overflow: hidden;
-  display: block;
-  line-height: 1;
-}
-
-.loader__word {
-  display: inline-block;
-  opacity: 0;
-  transform: translateY(100%);
-  will-change: transform, opacity;
-}
-
-.loader__word--hi {
+.loader__greeting {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(3rem, 12vw, 7rem);
+  font-size: clamp(2rem, 8vw, 5rem);
   font-weight: 700;
   font-style: italic;
   color: #1a1a1a;
   letter-spacing: -0.02em;
 }
 
-.loader__word--iam {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(1.25rem, 3vw, 1.75rem);
-  font-weight: 400;
-  font-style: italic;
-  color: #666666;
-  letter-spacing: 0.05em;
-}
-
-.loader__word--name {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(2rem, 7vw, 4.5rem);
-  font-weight: 700;
-  color: #1a1a1a;
-  letter-spacing: -0.01em;
-}
-
-.loader__idot {
-  position: relative;
-  display: inline-block;
-}
-
-.loader__dots {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 10000;
-}
-
-.loader__dot {
-  position: absolute;
-  width: var(--dot-size);
-  height: var(--dot-size);
-  background: #1a1a1a;
-  border-radius: 50%;
-  opacity: 0;
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .loader__word {
+  .loader__greeting {
     opacity: 1;
-    transform: translateY(0);
   }
 }
