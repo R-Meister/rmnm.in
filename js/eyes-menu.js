@@ -47,6 +47,7 @@ class EyesMenu {
   expand() {
     if (this.expanded) return;
     this.expanded = true;
+    this.menu.classList.add('expanded');
 
     const eyeSize = this.getEyeSize();
     const expandedWidth = this.getExpandedWidth();
@@ -88,6 +89,7 @@ class EyesMenu {
   collapse() {
     if (!this.expanded) return;
     this.expanded = false;
+    this.menu.classList.remove('expanded');
 
     const collapsedWidth = this.getCollapsedWidth();
     const eyeSize = this.getEyeSize();

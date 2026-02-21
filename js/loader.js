@@ -8,14 +8,8 @@ class Loader {
       "Hello",
       "Hola",
       "Bonjour",
-      "Hallo",
       "你好",
       "こんにちは",
-      "Ciao",
-      "Здравствуйте",
-      "مرحبا",
-      "Olá",
-      "안녕하세요",
       "नमस्ते"
     ];
     this.currentIndex = 0;
@@ -46,12 +40,16 @@ class Loader {
       }
       if (this.currentIndex >= this.greetings.length - 1) {
         clearInterval(this.intervalId);
+        this.greetingElement.classList.add('flow');
+        this.playFlowAnimation();
       }
     }, 320);
+  }
 
+  playFlowAnimation() {
     this.timeoutId = setTimeout(() => {
       this.fadeOutLoader();
-    }, 3800);
+    }, 1500);
   }
 
   fadeOutLoader() {
