@@ -11,7 +11,6 @@ export class IdCard {
 
   init() {
     this.setupInitialState();
-    this.createBarcode();
     this.animate();
     this.setupHoverEffect();
   }
@@ -19,33 +18,18 @@ export class IdCard {
   setupInitialState() {
     gsap.set(this.container, {
       opacity: 0,
-      y: 50,
-      rotateY: -15
+      y: 60,
     });
 
     gsap.set(this.lanyard, {
       opacity: 0,
-      y: -30
+      y: -40
     });
 
     gsap.set(this.card, {
-      rotateX: 10,
-      scale: 0.95
+      rotateX: 12,
+      scale: 0.9,
     });
-  }
-
-  createBarcode() {
-    const barcode = document.querySelector('.id-card-barcode');
-    if (!barcode) return;
-
-    const lines = 12;
-    for (let i = 0; i < lines; i++) {
-      const line = document.createElement('div');
-      line.classList.add('barcode-line');
-      const height = Math.random() * 15 + 5;
-      line.style.height = `${height}px`;
-      barcode.appendChild(line);
-    }
   }
 
   animate() {
@@ -54,7 +38,6 @@ export class IdCard {
     tl.to(this.container, {
       opacity: 1,
       y: 0,
-      rotateY: 0,
       duration: 1,
       ease: 'power3.out'
     })
@@ -67,9 +50,9 @@ export class IdCard {
     .to(this.card, {
       rotateX: 0,
       scale: 1,
-      duration: 0.8,
+      duration: 0.9,
       ease: 'power2.out'
-    }, '-=0.4');
+    }, '-=0.5');
 
     this.addFloatingAnimation();
     this.addLanyardSwing();
@@ -77,8 +60,8 @@ export class IdCard {
 
   addFloatingAnimation() {
     gsap.to(this.card, {
-      y: -8,
-      duration: 2,
+      y: -6,
+      duration: 2.5,
       ease: 'sine.inOut',
       repeat: -1,
       yoyo: true
@@ -87,8 +70,8 @@ export class IdCard {
 
   addLanyardSwing() {
     gsap.to(this.lanyard, {
-      rotateZ: 1.5,
-      duration: 3,
+      rotateZ: 1,
+      duration: 3.5,
       ease: 'sine.inOut',
       repeat: -1,
       yoyo: true
@@ -100,9 +83,9 @@ export class IdCard {
 
     this.container.addEventListener('mouseenter', () => {
       gsap.to(this.card, {
-        rotateY: 10,
-        rotateX: -5,
-        scale: 1.05,
+        rotateY: 8,
+        rotateX: -4,
+        scale: 1.04,
         duration: 0.4,
         ease: 'power2.out'
       });
@@ -124,8 +107,8 @@ export class IdCard {
       const y = (e.clientY - rect.top) / rect.height - 0.5;
 
       gsap.to(this.card, {
-        rotateY: x * 20,
-        rotateX: -y * 15,
+        rotateY: x * 18,
+        rotateX: -y * 12,
         duration: 0.3,
         ease: 'power2.out'
       });

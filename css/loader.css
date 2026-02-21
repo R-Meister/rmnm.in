@@ -25,10 +25,16 @@
   font-style: italic;
   color: #1a1a1a;
   letter-spacing: -0.02em;
+  display: inline-block;
 }
 
 .loader__greeting.flow {
   animation: flowPulse 1.2s ease-in-out;
+}
+
+/* Curtain panels for split-reveal transition */
+.loader-curtain {
+  will-change: transform;
 }
 
 @keyframes flowPulse {

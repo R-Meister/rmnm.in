@@ -48,11 +48,19 @@ class Loader {
 
   playFlowAnimation() {
     this.timeoutId = setTimeout(() => {
-      this.fadeOutLoader();
+      this.transitionOut();
     }, 1500);
   }
 
-  fadeOutLoader() {
+  transitionOut() {
+    // Create curtain panels for the split-reveal transition
+    const curtainLeft = document.createElement('div');
+    const curtainRight = document.createElement('div');
+    curtainLeft.className = 'loader-curtain loader-curtain--left';
+    curtainRight.className = 'loader-curtain loader-curtain--right';
+    this.loader.appendChild(curtainLeft);
+    this.loader.appendChild(curtainRight);
+
     const tl = gsap.timeline({
       onComplete: () => {
         this.hideLoader();
@@ -60,12 +68,51 @@ class Loader {
       }
     });
 
-    tl.to(this.loader, {
+    // 1. Scale up the greeting text and fade it out
+    tl.to(this.greetingElement, {
+      scale: 1.3,
       opacity: 0,
-      duration: 0.3,
-      ease: 'power2.inOut'
+      duration: 0.5,
+      ease: 'power2.in'
     });
 
+    // 2. Set up the curtains: position the loader bg as two halves
+    tl.set(this.loader, {
+      background: 'transparent'
+    });
+    tl.set(curtainLeft, {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '50%',
+      height: '100%',
+      background: '#f0ede8',
+      zIndex: 10000,
+    });
+    tl.set(curtainRight, {
+      position: 'fixed',
+      top: 0,
+      right: 0,
+      width: '50%',
+      height: '100%',
+      background: '#f0ede8',
+      zIndex: 10000,
+    });
+
+    // 3. Slide curtains apart to reveal the landing page
+    tl.to(curtainLeft, {
+      xPercent: -100,
+      duration: 0.9,
+      ease: 'power3.inOut'
+    }, '+=0.1');
+
+    tl.to(curtainRight, {
+      xPercent: 100,
+      duration: 0.9,
+      ease: 'power3.inOut'
+    }, '<');
+
+    // 4. Clean up the loader
     tl.set(this.loader, { display: 'none' });
   }
 
