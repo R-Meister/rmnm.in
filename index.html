@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="css/global.css">
   <link rel="stylesheet" href="css/loader.css">
   <link rel="stylesheet" href="css/eyes-menu.css">
+  <link rel="stylesheet" href="css/id-card.css">
 </head>
 
 <body>
@@ -42,16 +43,45 @@
     </nav>
   </div>
 
+  <div class="id-card-container">
+    <div class="lanyard">
+      <div class="lanyard-left"></div>
+      <div class="lanyard-right"></div>
+      <div class="lanyard-text">rmnm.in</div>
+      <div class="lanyard-connector"></div>
+    </div>
+    <div class="id-card">
+      <div class="id-card-header">
+        <div class="id-card-title">Developer ID</div>
+      </div>
+      <div class="id-card-photo-container">
+        <div class="id-card-photo">
+          <img src="rmn.png" alt="Raman Mendiratta" onerror="this.style.display='none';this.parentElement.innerHTML='<span class=\'id-card-photo-placeholder\'>RM</span>'" />
+        </div>
+      </div>
+      <div class="id-card-info">
+        <div class="id-card-name">Raman Mendiratta</div>
+        <div class="id-card-role">Full Stack Developer</div>
+      </div>
+      <div class="id-card-footer">
+        <span class="id-card-website">rmnm.in</span>
+        <div class="id-card-barcode"></div>
+      </div>
+    </div>
+  </div>
+
   <div class="content">
     <h1>Welcome</h1>
     <p>This is your landing page. The eyes menu component is fixed at the top left corner.</p>
   </div>
 
   <script src="js/eyes-menu.js"></script>
+  <script src="js/id-card.js"></script>
   <script type="module" src="js/main.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       new EyesMenu();
+      new IdCard();
     });
   </script>
 </body>
