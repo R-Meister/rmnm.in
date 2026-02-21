@@ -13,16 +13,6 @@ class EyesMenu {
     this.init();
   }
 
-  getEyeSize() {
-    const eye = this.eyes[0];
-    if (!eye) return 100;
-    return eye.offsetWidth;
-  }
-
-  getPupilMaxMove() {
-    return this.getEyeSize() * 0.18;
-  }
-
   init() {
     this.menu.addEventListener('mouseenter', () => this.expand());
     this.menu.addEventListener('mouseleave', () => this.collapse());
@@ -31,27 +21,9 @@ class EyesMenu {
     this.startIdleAnimation();
   }
 
-  getCollapsedWidth() {
-    const eyeSize = this.getEyeSize();
-    const gap = eyeSize * 0.22;
-    const padding = eyeSize * 0.25;
-    return eyeSize * 2 + gap + padding * 2;
-  }
-
-  getExpandedWidth() {
-    const eyeSize = this.getEyeSize();
-    const padding = eyeSize * 0.25;
-    return eyeSize * 8 + padding * 2;
-  }
-
   expand() {
     if (this.expanded) return;
     this.expanded = true;
-    this.menu.classList.add('expanded');
-
-    const eyeSize = this.getEyeSize();
-    const expandedWidth = this.getExpandedWidth();
-    const expandedGap = eyeSize * 6;
 
     gsap.killTweensOf(this.menu);
     gsap.killTweensOf(this.menu.querySelector('.eyes'));
@@ -59,13 +31,13 @@ class EyesMenu {
     gsap.killTweensOf(this.navLinks);
 
     gsap.to(this.menu, {
-      width: expandedWidth,
+      width: 700,
       duration: 0.8,
       ease: 'elastic.out(1,0.6)'
     });
 
     gsap.to(this.menu.querySelector('.eyes'), {
-      gap: expandedGap,
+      gap: 500,
       duration: 0.8,
       ease: 'elastic.out(1,0.6)'
     });
@@ -89,11 +61,6 @@ class EyesMenu {
   collapse() {
     if (!this.expanded) return;
     this.expanded = false;
-    this.menu.classList.remove('expanded');
-
-    const collapsedWidth = this.getCollapsedWidth();
-    const eyeSize = this.getEyeSize();
-    const collapsedGap = eyeSize * 0.22;
 
     gsap.killTweensOf(this.menu);
     gsap.killTweensOf(this.menu.querySelector('.eyes'));
@@ -101,13 +68,13 @@ class EyesMenu {
     gsap.killTweensOf(this.navLinks);
 
     gsap.to(this.menu, {
-      width: collapsedWidth,
+      width: 170,
       duration: 0.28,
       ease: 'power3.out'
     });
 
     gsap.to(this.menu.querySelector('.eyes'), {
-      gap: collapsedGap,
+      gap: 6,
       duration: 0.28,
       ease: 'power3.out'
     });
@@ -125,13 +92,12 @@ class EyesMenu {
   }
 
   trackCursor(e) {
-    const max = this.getPupilMaxMove();
-    
     this.eyes.forEach((eye, i) => {
       const rect = eye.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
       const angle = Math.atan2(e.clientY - centerY, e.clientX - centerX);
+      const max = 10;
 
       gsap.to(this.pupils[i], {
         x: Math.cos(angle) * max,
@@ -161,11 +127,8 @@ class EyesMenu {
   }
 
   startIdleAnimation() {
-    const eyeSize = this.getEyeSize();
-    const idleMove = eyeSize * 0.02;
-    
     gsap.to(this.pupils, {
-      x: `+=${idleMove}`,
+      x: '+=2',
       yoyo: true,
       repeat: -1,
       duration: 2,
