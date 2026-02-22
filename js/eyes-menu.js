@@ -44,6 +44,7 @@ class EyesMenu {
 
     gsap.to(this.nav, {
       opacity: 1,
+      pointerEvents: 'auto',
       duration: 0.2,
       delay: 0.2
     });
@@ -81,6 +82,7 @@ class EyesMenu {
 
     gsap.to(this.nav, {
       opacity: 0,
+      pointerEvents: 'none',
       duration: 0.15
     });
 
